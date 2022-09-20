@@ -15,7 +15,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    phone_no = models.CharField(max_length=13, blank=True, null=True)
+    phone_no = models.CharField(max_length=13, unique=True)
     ver_code = models.CharField(blank=True, null=True, max_length=10)
     profile_picture = models.ImageField(upload_to='images/doctors_profile/%Y/%m', 
                                         default='images/default-avatar.jpg',
@@ -26,18 +26,17 @@ class User(AbstractUser):
                                             options={'quality': 60}
                                                 )
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'phone_no'
     REQUIRED_FIELDS = ['username']
 
 
     class Meta:
+        verbose_name = 'User'
         verbose_name_plural = 'Users'
-        db_table = 'users'
-        
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.username
+        return self.user.email
 
